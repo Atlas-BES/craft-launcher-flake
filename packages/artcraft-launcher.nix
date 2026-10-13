@@ -66,6 +66,11 @@ stdenv.mkDerivation {
     mkdir -p $out
     cp -r bin share $out/
 
+    # Replace the tarball's desktop entry with our own (no version in the
+    # name, proper capitalization); icons come from the tarball's share/.
+    install -Dm644 ${./artcraft-launcher.desktop} \
+      $out/share/applications/ai.storyteller.artcraft-launcher.desktop
+
     # Belt and suspenders: also supply the dlopen'd libraries through the
     # wrapper in case the runtime environment lacks them.
     wrapProgram $out/bin/artcraft-launcher \
