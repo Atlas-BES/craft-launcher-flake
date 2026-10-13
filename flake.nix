@@ -109,10 +109,18 @@
         {
           options.programs.artcraft-launcher = {
             enable = lib.mkEnableOption "ArtCraft Launcher";
-            package = lib.mkPackageOption self.packages.${pkgs.system} "artcraft-launcher" { };
+            package = lib.mkOption {
+              type = lib.types.package;
+              description = "The artcraft-launcher package to use.";
+              defaultText = lib.literalExpression ''self.packages.''${pkgs.system}.default'';
+            };
           };
 
+          # Resolve the default package lazily here, not in options:
+          # forcing the `pkgs` module argument in the options block causes
+          # infinite recursion when merged into a NixOS configuration.
           config = lib.mkIf cfg.enable {
+            programs.artcraft-launcher.package = lib.mkDefault self.packages.${pkgs.system}.default;
             environment.systemPackages = [ cfg.package ];
           };
         };
