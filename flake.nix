@@ -125,6 +125,15 @@
           };
         };
 
+      # Overlay so `pkgs.artcraft-launcher` resolves when applied via
+      # nixpkgs.overlays (e.g. inputs.<name>.overlays.default).
+      overlays.default = final: prev: {
+        artcraft-launcher =
+          if self.packages ? ${final.system}
+          then self.packages.${final.system}.default
+          else throw "artcraft-launcher is not available for ${final.system}";
+      };
+
       pkgsFor = system: import nixpkgs { inherit system; };
     in
     {
@@ -138,6 +147,11 @@
           default = self.packages.${system}.artcraft-launcher;
         }
       );
+
+      overlays = {
+        artcraft-launcher = overlays.default;
+        default = overlays.default;
+      };
 
       nixosModules = {
         artcraft-launcher = nixosModule;
