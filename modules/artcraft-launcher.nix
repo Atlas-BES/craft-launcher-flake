@@ -26,6 +26,12 @@ in
 
   config = lib.mkIf cfg.enable {
     programs.artcraft-launcher.package = lib.mkDefault self.packages.${pkgs.system}.default;
-    environment.systemPackages = [ cfg.package ];
+
+    # appimage-run is a required runtime dependency: the Craft apps the
+    # launcher installs ship as AppImages.
+    environment.systemPackages = [
+      cfg.package
+      pkgs.appimage-run
+    ];
   };
 }

@@ -19,6 +19,10 @@ runtime dependencies pinned in the store.
 - **Desktop integration** — ships a proper desktop entry (name without
   version, description, `PackageManager` category) plus the upstream hicolor
   icon set (16–512px PNG + SVG)
+- **`appimage-run` included** — the Craft apps the launcher installs ship as
+  AppImages, so `appimage-run` is treated as a required dependency: it is
+  added to the launcher's PATH by the package wrapper and installed
+  system-wide by the NixOS module
 
 ## Repository layout
 
@@ -27,6 +31,7 @@ flake.nix                          thin wiring: inputs -> outputs
 sources.nix                        release metadata: version, URLs, hashes
 packages/artcraft-launcher.nix     the package derivation
 packages/artcraft-launcher.desktop desktop entry
+                                   (requires appimage-run, see Features)
 modules/artcraft-launcher.nix      NixOS module (programs.artcraft-launcher)
 overlays/default.nix               overlay exposing pkgs.artcraft-launcher
 ```
@@ -77,7 +82,13 @@ sudo nixos-rebuild switch --flake .#myhost
 ```
 
 The launcher appears in your app menu as **ArtCraft Launcher** with its icon
-and description, and is runnable as `artcraft-launcher`.
+and description, and is runnable as `artcraft-launcher`. `appimage-run` is
+installed system-wide as well (required to run the Craft apps).
+
+With the overlay approach (Option A), the wrapper inside the
+`artcraft-launcher` package supplies `appimage-run` automatically; add
+`pkgs.appimage-run` to `systemPackages` yourself if other tooling should see
+it on the system PATH.
 
 ## Try without installing
 

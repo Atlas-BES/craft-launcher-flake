@@ -19,6 +19,7 @@
   wayland,
   xorg,
   libxkbcommon,
+  appimage-run,
 }:
 
 let
@@ -73,7 +74,10 @@ stdenv.mkDerivation {
 
     # Belt and suspenders: also supply the dlopen'd libraries through the
     # wrapper in case the runtime environment lacks them.
+    # appimage-run is required to launch the Craft apps the launcher
+    # installs (they ship as AppImages).
     wrapProgram $out/bin/artcraft-launcher \
+      --prefix PATH : "${lib.makeBinPath [ appimage-run ]}" \
       --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath [
         mesa
         vulkan-loader
@@ -89,7 +93,7 @@ stdenv.mkDerivation {
   '';
 
   meta = with lib; {
-    description = "Launcher for the Craft App Suite (PhotoCraft, FilmCraft, ...)";
+    description = "Launcher for the Craft App Suite (PhotoCraft, FilmCraft, ...) (requires appimage-run)";
     longDescription = ''
       ArtCraft Launcher lists every app in the Craft App Suite,
       installs the right build for your computer, and keeps them up
