@@ -16,8 +16,9 @@
     aarch64-linux.hash = "sha256-21me8n5Cjl8qhHIJ0f8pe/HSXjqJi3QES45mRP0F6Xc=";
   };
 
-  # URL template; <system> is the nix system string ("x86_64-linux", ...).
+  # URL template; `arch` is the tarball arch ("x86_64", "aarch64"), i.e. the
+  # nix system string minus the "-linux" suffix.
   urlOf =
-    system: tag: version:
-    "https://github.com/storytold/craft-launcher/releases/download/${tag}/artcraft-launcher-${version}-linux-${system}.tar.gz";
+    arch: tag: version:
+    "https://github.com/storytold/craft-launcher/releases/download/${tag}/artcraft-launcher-${version}-linux-${arch}.tar.gz";
 }

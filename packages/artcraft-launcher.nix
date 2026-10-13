@@ -31,7 +31,7 @@ stdenv.mkDerivation {
   inherit version;
 
   src = fetchurl {
-    url = sources.urlOf system tag version;
+    url = sources.urlOf tarballSystem tag version;
     hash = sources.perSystem.${system}.hash;
   };
 
