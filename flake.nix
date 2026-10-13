@@ -36,6 +36,9 @@
           gcc-unwrapped,
           mesa,
           vulkan-loader,
+          wayland,
+          xorg,
+          libxkbcommon,
           makeWrapper,
         }:
         stdenv.mkDerivation {
@@ -54,12 +57,21 @@
             makeWrapper
           ];
 
-          # glibc + libgcc_s are linked directly; libEGL/Vulkan are dlopen'd
-          # at runtime (wgpu renderer), so they go on the wrapper path.
+          # glibc + libgcc_s are linked directly. Everything else is
+          # dlopen'd at runtime and must be on the binary's RPATH:
+          #   - mesa / vulkan-loader: wgpu renderer (libEGL / libvulkan)
+          #   - wayland / xorg libs / libxkbcommon: winit windowing backend
+          #     (dlopens libwayland-client, libX11, libXcursor, libXi, libxkbcommon[-x11])
           buildInputs = [ gcc-unwrapped ];
           runtimeDependencies = [
-            mesa # libEGL.so.1 / libGL.so.1
-            vulkan-loader # libvulkan.so.1
+            mesa
+            vulkan-loader
+            wayland
+            xorg.libX11
+            xorg.libXcursor
+            xorg.libXi
+            xorg.libXrandr
+            libxkbcommon
           ];
 
           sourceRoot = "artcraft-launcher-${version}-linux-${lib.removeSuffix "-linux" system}";
@@ -76,6 +88,12 @@
               --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath [
                 mesa
                 vulkan-loader
+                wayland
+                xorg.libX11
+                xorg.libXcursor
+                xorg.libXi
+                xorg.libXrandr
+                libxkbcommon
               ]}"
 
             runHook postInstall
