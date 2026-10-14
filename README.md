@@ -35,18 +35,6 @@ This flake makes the *launcher* the single declarative entry point:
 The launcher pulls the appimages of the applications and puts them in your $USER folder, some people may not like this approach.
 As of right now, individual apps can not be configured or declaratively installed from your configuration, this is subject to change.
 
-## Repository layout
-
-```
-flake.nix                          thin wiring: inputs -> outputs
-sources.nix                        release metadata: version, URLs, hashes
-packages/artcraft-launcher.nix     the package derivation
-packages/artcraft-launcher.desktop desktop entry
-                                   (requires appimage-run, see Features)
-modules/artcraft-launcher.nix      NixOS module (programs.artcraft-launcher)
-overlays/default.nix               overlay exposing pkgs.artcraft-launcher
-```
-
 ## Usage
 
 ### Option A: overlay
