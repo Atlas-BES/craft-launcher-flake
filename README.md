@@ -23,15 +23,17 @@ would be a constant chase.
 This flake makes the *launcher* the single declarative entry point:
 
 - **One input, whole suite** — a single flake input gives you the ability to
-  install and update every Craft app, instead of one package per app that
-  each needs its own version bumps and hashes.
-- **Commit-pinned for security** — flake inputs can lock to a commit and hash, so
-  what lands in your system is exactly what you reviewed. Nothing updates
+  view, install, and update all new Craft Apps instead of adding a single package
+  whenever a new app is released, and when an update is released you can instantly
+  update from the launcher.
+- **Commit-pinning for security** — launcher does not have to be constantly
+- updated, so flake inputs can lock to a commit and hash, and what lands 
+  in your system is exactly what you reviewed. Nothing updates
   behind your back.
 
-In short: the flake pins the one stable thing (the launcher) and delegates
-the fast-moving part (the apps) to the launcher — an all-in-one solution to
-a rapidly changing suite of software, without giving up reproducibility.
+## The apps are not declarative?
+The launcher pulls the appimages of the applications and puts them in your $USER folder, some people may not like this approach.
+As of right now, individual apps can not be configured or declaratively installed from your configuration, this is subject to change.
 
 ## Repository layout
 
