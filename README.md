@@ -18,20 +18,16 @@ desktop entry and icon set.
 
 The Craft App Suite (PhotoCraft, FilmCraft, WordCraft, ...) is **rapidly
 evolving** — versions move fast and packaging each app individually in Nix
-would be a constant chase. The launcher itself is that chase, done by
-upstream: it discovers, installs and updates the apps for you.
+would be a constant chase.
 
 This flake makes the *launcher* the single declarative entry point:
 
 - **One input, whole suite** — a single flake input gives you the ability to
   install and update every Craft app, instead of one package per app that
   each needs its own version bumps and hashes.
-- **Commit-pinned for security** — flake inputs lock to a commit and hash, so
+- **Commit-pinned for security** — flake inputs can lock to a commit and hash, so
   what lands in your system is exactly what you reviewed. Nothing updates
   behind your back.
-- **Updated when *you* want** — the suite evolves upstream, but your system
-  only changes when you pull the lock forward (via `./update-flake.sh` or a
-  lock update), which fits NixOS's atomic, reproducible model.
 
 In short: the flake pins the one stable thing (the launcher) and delegates
 the fast-moving part (the apps) to the launcher — an all-in-one solution to
