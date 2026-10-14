@@ -17,7 +17,10 @@
   mesa,
   vulkan-loader,
   wayland,
-  xorg,
+  libx11,
+  libxcursor,
+  libxi,
+  libxrandr,
   libxkbcommon,
   appimage-run,
 }:
@@ -51,10 +54,10 @@ stdenv.mkDerivation {
     mesa
     vulkan-loader
     wayland
-    xorg.libX11
-    xorg.libXcursor
-    xorg.libXi
-    xorg.libXrandr
+    libx11
+    libxcursor
+    libxi
+    libxrandr
     libxkbcommon
   ];
 
@@ -82,10 +85,10 @@ stdenv.mkDerivation {
         mesa
         vulkan-loader
         wayland
-        xorg.libX11
-        xorg.libXcursor
-        xorg.libXi
-        xorg.libXrandr
+        libx11
+        libxcursor
+        libxi
+        libxrandr
         libxkbcommon
       ]}"
 

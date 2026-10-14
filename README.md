@@ -12,8 +12,8 @@ runtime dependencies pinned in the store.
 - **Dependencies declared** — the binary links `glibc` + `libgcc_s` directly
   and `dlopen`s the rest at runtime, all supplied by the package:
   - `mesa`, `vulkan-loader` — wgpu renderer (libEGL / libvulkan)
-  - `wayland`, `xorg.libX11`, `xorg.libXcursor`, `xorg.libXi`,
-    `xorg.libXrandr`, `libxkbcommon` — winit windowing (Wayland and X11)
+  - `wayland`, `libx11`, `libxcursor`, `libxi`, `libxrandr`,
+    `libxkbcommon` — winit windowing (Wayland and X11)
 - **Clean ELF patching** — `autoPatchelfHook` re-points the interpreter and
   rpath to Nix's glibc; no reliance on `/lib64`
 - **Desktop integration** — ships a proper desktop entry (name without
