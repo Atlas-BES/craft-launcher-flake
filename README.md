@@ -6,23 +6,36 @@ runtime dependencies pinned in the store.
 
 ## Features
 
-- **Latest release, pinned** — pulls `artcraft-launcher-<version>-linux-<arch>.tar.gz`
-  from upstream GitHub releases, with SHA256 hashes verified per architecture
-  (`x86_64-linux`, `aarch64-linux`)
-- **Dependencies declared** — the binary links `glibc` + `libgcc_s` directly
-  and `dlopen`s the rest at runtime, all supplied by the package:
-  - `mesa`, `vulkan-loader` — wgpu renderer (libEGL / libvulkan)
-  - `wayland`, `libx11`, `libxcursor`, `libxi`, `libxrandr`,
-    `libxkbcommon` — winit windowing (Wayland and X11)
-- **Clean ELF patching** — `autoPatchelfHook` re-points the interpreter and
-  rpath to Nix's glibc; no reliance on `/lib64`
-- **Desktop integration** — ships a proper desktop entry (name without
-  version, description, `PackageManager` category) plus the upstream hicolor
-  icon set (16–512px PNG + SVG)
-- **`appimage-run` included** — the Craft apps the launcher installs ship as
-  AppImages, so `appimage-run` is treated as a required dependency: it is
-  added to the launcher's PATH by the package wrapper and installed
-  system-wide by the NixOS module
+Installs the official prebuilt `.tar.gz` release with verified SHA256 hashes
+for `x86_64-linux` and `aarch64-linux`. Every runtime dependency is declared
+and supplied by the package (glibc/libgcc via `autoPatchelfHook`; the wgpu
+renderer's `mesa`/`vulkan-loader` and winit's `wayland`/`libx11`/`libxcursor`/
+`libxi`/`libxrandr`/`libxkbcommon` via rpath and wrapper), plus
+`appimage-run` for the AppImages the Craft apps ship as. Includes a proper
+desktop entry and icon set.
+
+## Why the launcher and not individual apps?
+
+The Craft App Suite (PhotoCraft, FilmCraft, WordCraft, ...) is **rapidly
+evolving** — versions move fast and packaging each app individually in Nix
+would be a constant chase. The launcher itself is that chase, done by
+upstream: it discovers, installs and updates the apps for you.
+
+This flake makes the *launcher* the single declarative entry point:
+
+- **One input, whole suite** — a single flake input gives you the ability to
+  install and update every Craft app, instead of one package per app that
+  each needs its own version bumps and hashes.
+- **Commit-pinned for security** — flake inputs lock to a commit and hash, so
+  what lands in your system is exactly what you reviewed. Nothing updates
+  behind your back.
+- **Updated when *you* want** — the suite evolves upstream, but your system
+  only changes when you pull the lock forward (via `./update-flake.sh` or a
+  lock update), which fits NixOS's atomic, reproducible model.
+
+In short: the flake pins the one stable thing (the launcher) and delegates
+the fast-moving part (the apps) to the launcher — an all-in-one solution to
+a rapidly changing suite of software, without giving up reproducibility.
 
 ## Repository layout
 
