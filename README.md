@@ -74,6 +74,52 @@ craftlauncher.nixosModules.default
 > `modules` list (or in `imports`); *overlays* (`overlays.default`) go in
 > `nixpkgs.overlays`. Mixing them up causes "infinite recursion" errors.
 
+### Option C: Home Manager
+
+For per-user installation without touching the system config, enable the
+Home Manager module (same `programs.artcraft-launcher` options):
+
+```nix
+# flake.nix
+inputs = {
+  nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  craftlauncher.url = "github:Atlas-BES/craft-launcher-flake";
+  home-manager = {
+    url = "github:nix-community/home-manager";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
+};
+
+outputs = { self, nixpkgs, craftlauncher, home-manager, ... }: {
+  # with the NixOS-integrated home-manager setup:
+  nixosConfigurations.myhost = nixpkgs.lib.nixosSystem {
+    system = "x86_64-linux";
+    modules = [
+      home-manager.nixosModules.home-manager
+      ({ ... }: {
+        home-manager.users.atlas.imports = [
+          craftlauncher.homeManagerModules.default
+          ({ ... }: { programs.artcraft-launcher.enable = true; })
+        ];
+      })
+    ];
+  };
+
+  # ...or with a standalone homeConfiguration:
+  homeConfigurations.atlas = home-manager.lib.homeManagerConfiguration {
+    pkgs = nixpkgs.legacyPackages.x86_64-linux;
+    modules = [
+      craftlauncher.homeManagerModules.default
+      ({ ... }: { programs.artcraft-launcher.enable = true; })
+    ];
+  };
+};
+```
+
+The module adds the launcher and `appimage-run` to `home.packages` for that
+user only. Desktop entries and icons from the user profile are picked up by
+the desktop environment automatically.
+
 Then:
 
 ```sh
@@ -82,7 +128,8 @@ sudo nixos-rebuild switch --flake .#myhost
 
 The launcher appears in your app menu as **ArtCraft Launcher** with its icon
 and description, and is runnable as `artcraft-launcher`. `appimage-run` is
-installed system-wide as well (required to run the Craft apps).
+installed system-wide as well with Option B (required to run the Craft
+apps), and per-user with Option C.
 
 With the overlay approach (Option A), the wrapper inside the
 `artcraft-launcher` package supplies `appimage-run` automatically; add

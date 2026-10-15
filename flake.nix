@@ -7,6 +7,7 @@
 #   sources.nix                      release metadata: version, URLs, hashes
 #   packages/artcraft-launcher.nix   the package derivation
 #   modules/artcraft-launcher.nix    NixOS module (programs.artcraft-launcher)
+#   modules/home-manager.nix         Home Manager module (same options)
 #   overlays/default.nix             overlay exposing pkgs.artcraft-launcher
 #   README.md                        usage docs
 {
@@ -54,6 +55,16 @@
             inherit lib config pkgs self;
           };
         default = self.nixosModules.artcraft-launcher;
+      };
+
+      homeManagerModules = {
+        # Same wrapper pattern as the NixOS module.
+        artcraft-launcher =
+          { lib, config, pkgs, ... }:
+          import ./modules/home-manager.nix {
+            inherit lib config pkgs self;
+          };
+        default = self.homeManagerModules.artcraft-launcher;
       };
     };
 }
