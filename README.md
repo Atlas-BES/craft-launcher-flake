@@ -82,35 +82,23 @@ Home Manager module (same `programs.artcraft-launcher` options):
 ```nix
 # flake.nix
 inputs = {
-  nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   craftlauncher.url = "github:Atlas-BES/craft-launcher-flake";
-  home-manager = {
-    url = "github:nix-community/home-manager";
-    inputs.nixpkgs.follows = "nixpkgs";
-  };
 };
 
-outputs = { self, nixpkgs, craftlauncher, home-manager, ... }: {
-  # with the NixOS-integrated home-manager setup:
+outputs = { self, nixpkgs, ... } @ inputs: {
   nixosConfigurations.myhost = nixpkgs.lib.nixosSystem {
     system = "x86_64-linux";
     modules = [
       home-manager.nixosModules.home-manager
-      ({ ... }: {
-        home-manager.users.atlas.imports = [
-          craftlauncher.homeManagerModules.default
-          ({ ... }: { programs.artcraft-launcher.enable = true; })
+      {
+        home-manager.users.Your User.imports = [
+          inputs.craftlauncher.homeManagerModules.default
+          {
+            # Put this wherever you install user apps
+            programs.artcraft-launcher.enable = true;
+           }
         ];
-      })
-    ];
-  };
-
-  # ...or with a standalone homeConfiguration:
-  homeConfigurations.atlas = home-manager.lib.homeManagerConfiguration {
-    pkgs = nixpkgs.legacyPackages.x86_64-linux;
-    modules = [
-      craftlauncher.homeManagerModules.default
-      ({ ... }: { programs.artcraft-launcher.enable = true; })
+      }
     ];
   };
 };
