@@ -1,3 +1,5 @@
+# ARCHIVED - USE THE OFFICIAL LINUX REPOS
+
 # craft-launcher-flake
 
 NixOS flake that installs [ArtCraft Launcher](https://github.com/storytold/craft-launcher)
