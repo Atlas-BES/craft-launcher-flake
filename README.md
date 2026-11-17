@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-# ARCHIVED - USE THE OFFICIAL LINUX REPOS
+
 =======
 # Unarchived for the forseeable future
 >>>>>>> bf760c4 (update)
