@@ -8,12 +8,12 @@
 # SHA256SUMS.txt:
 #   nix hash convert --to base64 --hash-algo sha256 <hex-digest>
 {
-  version = "0.13.0";
-  tag = "v0.13.0";
+  version = "0.19.2";
+  tag = "v0.19.2";
 
   perSystem = {
-    x86_64-linux.hash = "sha256-OvS2ofdStO+xJgKtqZZERXMfpEBlkiSoPoqlp7XU//I=";
-    aarch64-linux.hash = "sha256-5a9eEsHtNkU9TnO43VAqt+FwqHfJLw0GV/v+JW8Xz9w=";
+    x86_64-linux.hash = "sha256-Oamut3+FqwbWVUCxlPFYLsjCZSn34QqMnWwH/yGAtm0=";
+    aarch64-linux.hash = "sha256-qSrKhFZiShDxQ5ikMJ5NQk0amCA5k6Ki2UhBBNfW4t0=";
   };
 
   # URL template; `arch` is the tarball arch ("x86_64", "aarch64"), i.e. the
